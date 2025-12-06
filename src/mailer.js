@@ -10,16 +10,24 @@ dotenv.config();
  * @param {string} [formName] - Nombre del formulario para asunto y archivos
  */
 export async function sendEmailWithPDF(pdfPath, excelPath, to = null, formName = 'Formulario') {
+  
+  // --- AQUÍ ESTÁ EL CAMBIO IMPORTANTE ---
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp.gmail.com",  // Host explícito
+    port: 587,               // Puerto 587 (TLS) que SÍ funciona en la nube
+    secure: false,           // false es obligatorio para el puerto 587
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
+    },
+    tls: {
+      rejectUnauthorized: false // Ayuda a evitar errores de certificados en Docker
     }
   });
+  // --------------------------------------
 
   const mailOptions = {
-    // 1. REMITNETE
+    // 1. REMITENTE
     from: `"Sumiven" <${process.env.SMTP_USER}>`,           
     
     to: to || process.env.EMAIL_TO,                            
@@ -36,7 +44,12 @@ export async function sendEmailWithPDF(pdfPath, excelPath, to = null, formName =
     ]
   };
 
-  const info = await transporter.sendMail(mailOptions);
-  console.log('Correo enviado, messageId:', info.messageId);
-  return info;
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Correo enviado, messageId:', info.messageId);
+    return info;
+  } catch (error) {
+    console.error("Error enviando email:", error);
+    throw error; // Re-lanzar error para que el server.js se entere
+  }
 }
