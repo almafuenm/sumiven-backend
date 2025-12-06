@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Sumiven</title>
+    <style>
+        body { font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: #f0f2f5; 
+        margin: 0; 
+        padding: 0; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        min-height: 100vh;
+        color: #334155;
+        }
+        
+        /* --- MENÚ PRINCIPAL --- */
+        #menu-view { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            max-width: 480px; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            margin-top: 40px; 
+        }
+
+        .logo-container { 
+            margin-bottom: 40px; 
+            text-align: center; 
+            width: 100%; 
+        }
+        .logo-container img { 
+            max-width: 220px; 
+            height: auto; 
+            display: block; 
+            margin: 0 auto; 
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-top: 15px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- BOTONES DEL MENÚ --- */
+        .menu-btn { 
+            background: white; 
+            width: 100%; 
+            padding: 22px 25px; 
+            margin-bottom: 18px; 
+            border: 1px solid #e2e8f0;
+            border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); 
+            font-size: 1.15em; 
+            font-weight: 600; 
+            color: #1e293b; 
+            cursor: pointer; 
+            transition: all 0.2s ease-in-out; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-left-width: 6px; 
+            border-left-style: solid;
+        }
+
+        .menu-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+            background-color: #fff;
+        }
+
+        .menu-btn span { 
+            font-size: 1.4em; 
+            color: #cbd5e1; 
+            transition: color 0.2s;
+        }
+        .menu-btn:hover span { color: #004fa4; } 
+
+        .btn-informe { border-left-color: #004fa4; } 
+        .btn-cierre { border-left-color: #007e89; }  
+        .btn-reparacion { border-left-color: #2e8435; } 
+
+        #form-view { width: 100%; max-width: 800px; padding: 15px; box-sizing: border-box; display: none; }
+        .header-bar { display: flex; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .btn-back { background: transparent; border: none; font-size: 1em; cursor: pointer; color: #666; margin-right: 15px; display: flex; align-items: center; gap: 5px; font-weight: 600; }
+        .btn-back:hover { color: #000; }
+        h2 { margin: 0; color: #333; font-size: 1.3em; flex-grow: 1; text-align: center; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin-bottom: 20px; }
+        
+        /* --- TEXTOS Y LABELS --- */
+        label { 
+            display: block; 
+            margin-top: 15px; 
+            margin-bottom: 6px;
+            font-weight: 600; 
+            font-size: 0.9em; 
+            color: #475569; 
+            letter-spacing: 0.5px;
+        }
+
+        .section-title { margin-top: 25px; border-bottom: 2px solid #004fa4; padding-bottom: 8px; color: #004fa4; font-weight: 700; font-size: 1.1em; letter-spacing: 0.5px; }
+        .subtitle { margin-top: 20px; font-weight: bold; color: #575c61; background: #c1c8d6; padding: 10px; border-radius: 6px; font-size: 0.95em; text-transform: uppercase; }
+
+        input:not([type="checkbox"]), select, textarea { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1em; background: #fafafa; height: 45px; line-height: normal; -webkit-appearance: none; appearance: none}
+        textarea { height: auto; min-height: 80px; }
+        input:focus, select:focus, textarea:focus { background: #fff; border-color: #004fa4; outline: none; }
+        
+        .row { display: flex; gap: 15px; flex-wrap: wrap; }
+        .col { flex: 1; min-width: 200px; }
+
+        /* --- BOTONES DE ACCIÓN --- */
+        button { cursor: pointer; }
+        
+        .btn-primary { 
+            background: linear-gradient(145deg, #6288b1, #003771); 
+            color: white; 
+            border: none; 
+            padding: 18px; 
+            width: 100%; 
+            font-size: 1.1em; 
+            border-radius: 12px; 
+            margin-top: 30px; 
+            font-weight: 700; 
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); 
+            transition: transform 0.1s, box-shadow 0.2s; 
+        }
+
+        .btn-primary:hover { 
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active { transform: translateY(1px); }
+
+        .btn-secondary { 
+            background: #f1f5f9; 
+            color: #475569; 
+            border: 1px solid #e2e8f0; 
+            padding: 8px 16px; 
+            font-size: 0.85em; 
+            border-radius: 6px; 
+            margin-top: 8px; 
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .btn-secondary:hover { 
+            background: #e2e8f0; 
+            color: #1e293b;
+        }
+
+        .table-responsive { overflow-x: auto; width: 100%; margin-top: 10px; }
+        .dynamic-table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 0.9em; }
+        .dynamic-table th { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; padding: 10px; text-align: left; }
+        .dynamic-table td { border: 1px solid #dee2e6; padding: 5px; }
+        .dynamic-table input { border: none; background: transparent; padding: 5px; width: 100%; margin: 0; }
+
+        canvas { border: 2px dashed #ccc; background: #fff; width: 100%; height: 130px; cursor: crosshair; display: block; touch-action: none; border-radius: 6px; }
+
+        .hidden { display: none !important; }
+        
+        /* --- CHECKBOXES --- */
+        .checkbox-group { 
+            display: flex; 
+            gap: 12px; 
+            margin-top: 10px; 
+            flex-wrap: wrap; 
+        }
+        
+        .checkbox-group label { 
+            margin-top: 0;
+            font-weight: 500; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            background: #f8fafc; 
+            padding: 10px 16px; 
+            border-radius: 50px;
+            border: 1px solid #e2e8f0; 
+            cursor: pointer; 
+            width: auto !important; 
+            max-width: 100%; 
+            text-transform: none;
+            color: #334155;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-group label:hover { 
+            background: #f1f5f9; 
+            border-color: #cbd5e1;
+        }
+
+        .checkbox-group input[type="checkbox"] { 
+            width: 20px !important; 
+            height: 20px !important; 
+            min-width: 20px; 
+            margin: 0 !important; 
+            padding: 0; 
+            flex-shrink: 0; 
+            cursor: pointer; 
+            accent-color: #3b82f6;
+        }
+        @media (max-width: 480px) { .menu-btn { padding: 20px; font-size: 1em; } .section-title { font-size: 1em; } }
+    </style>
+</head>
+<body>
+
+    <div id="menu-view">
+        <div class="logo-container">
+            <img id="logo" src="logo/logo.png" alt="Logo Sumiven">
+            <h1 class="app-title">Gestión Sumiven</h1>
+        </div>
+        
+        <button class="menu-btn btn-informe" onclick="loadForm('Informe')">Evaluación Técnica <span>&rsaquo;</span></button>
+        <button class="menu-btn btn-cierre" onclick="loadForm('Cierre')">Orden de Cierre <span>&rsaquo;</span></button>
+        <button class="menu-btn btn-reparacion" onclick="loadForm('Reparacion')">Orden de Reparación <span>&rsaquo;</span></button>
+    </div>
+
+    <div id="form-view">
+        <div class="header-bar">
+            <button class="btn-back" onclick="showMenu()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Menú
+            </button>
+            <h2 id="formTitle">Formulario</h2>
+        </div>
+
+        <select id="formType" class="hidden">
+            <option value="Informe">Informe Evaluación Técnica</option>
+            <option value="Cierre">Orden de Cierre</option>
+            <option value="Reparacion">Orden de Reparación</option>
+        </select>
+
+        <form id="mainForm">
+            <div class="card">
+                <h3 class="section-title" id="ubiTitle" style="margin-top:0">Datos Generales</h3>
+                <div class="row">
+                    <div class="col"><label>Región</label><select id="REGION" onchange="handleRegionChange()"><option value="">Seleccione...</option></select></div>
+                    <div class="col" id="col-estado"><label>Estado</label><select id="ESTADO" onchange="handleEstadoChange()"><option value="">Seleccione...</option></select></div>
+                    <div class="col"><label>Ciudad</label><select id="CIUDAD"><option value="">Seleccione...</option></select></div>
+                </div>
+                <div id="commonFields"></div>
+            </div>
+
+            <div id="dynamicFields" style="padding:0; border:none; box-shadow:none;"></div>
+
+            <div class="card" id="dualSignatureSection">
+                <h3 class="section-title" style="margin-top:0">Firmas de Conformidad</h3>
+                <div class="row">
+                    <div class="col"><label>Técnico SUMIVEN</label><canvas id="sig-tech-main" width="300" height="130"></canvas><button type="button" class="btn-secondary" onclick="clearSignature('sig-tech-main')">Borrar</button></div>
+                    <div class="col"><label>Cliente</label><canvas id="sig-client-main" width="300" height="130"></canvas><button type="button" class="btn-secondary" onclick="clearSignature('sig-client-main')">Borrar</button></div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-primary" onclick="enviarFormulario()">Generar y Enviar PDF</button>
+        </form>
+    </div>
+
+    <script>
+        function loadForm(type) {
+            document.getElementById('menu-view').style.display = 'none';
+            document.getElementById('form-view').style.display = 'block';
+            const select = document.getElementById('formType'); select.value = type;
+            const titles = {'Informe': 'Evaluación Técnica', 'Cierre': 'Orden de Cierre', 'Reparacion': 'Orden de Reparación'};
+            document.getElementById('formTitle').innerText = titles[type];
+            renderForm();
+            window.scrollTo(0, 0); 
+        }
+        function showMenu() { document.getElementById('form-view').style.display = 'none'; document.getElementById('menu-view').style.display = 'flex'; }
+
+        const geoData = {
+            "Región Andina": {"Mérida": ["Mérida", "El Vigía", "Tovar"], "Táchira": ["San Cristóbal", "Táriba", "La Grita"], "Trujillo": ["Trujillo", "Valera", "Boconó"], "Barinas": ["Barinas", "Barinitas", "Socopó"], "Lara": ["Barquisimeto", "Cabudare", "Carora"]},
+            "Región Zuliana": { "Zulia": ["Maracaibo", "Cabimas", "Ciudad Ojeda", "San Carlos del Zulia"] },
+            "Región Insular": { "Nueva Esparta": ["Porlamar", "La Asunción", "Pampatar"], "Dependencias Federales": ["Los Roques"] },
+            "Región de la Cordillera Central": {"Distrito Capital": ["Caracas"], "Miranda": ["Los Teques", "Guarenas", "Guatire", "Chacao", "Baruta"], "Vargas": ["La Guaira", "Maiquetía", "Catia La Mar"], "Aragua": ["Maracay", "Turmero", "La Victoria"], "Carabobo": ["Valencia", "Puerto Cabello", "Guacara"]},
+            "Región de la Cordillera Oriental": {"Sucre": ["Cumaná", "Carúpano"], "Anzoátegui": ["Barcelona", "Puerto La Cruz", "Lechería", "El Tigre"], "Monagas": ["Maturín", "Punta de Mata"]},
+            "Sistema Deltaico": { "Delta Amacuro": ["Tucupita"] },
+            "Los Llanos": {"Apure": ["San Fernando de Apure", "Guasdualito"], "Portuguesa": ["Guanare", "Acarigua"], "Cojedes": ["San Carlos", "Tinaquillo"], "Guárico": ["San Juan de los Morros", "Calabozo", "Valle de la Pascua"]},
+            "Región del Sur del Orinoco": { "Amazonas": ["Puerto Ayacucho"], "Bolívar": ["Ciudad Bolívar", "Ciudad Guayana", "Puerto Ordaz", "Santa Elena de Uairén"] },
+            "Formación Lara-Falcón": { "Falcón": ["Coro", "Punto Fijo"], "Yaracuy": ["San Felipe", "Yaritagua"] }
+        };
+        const regSelect = document.getElementById('REGION'); const estSelect = document.getElementById('ESTADO'); const ciuSelect = document.getElementById('CIUDAD'); const colEstado = document.getElementById('col-estado');
+        for(let r in geoData) { let o = document.createElement('option'); o.value = r; o.innerText = r; regSelect.appendChild(o); }
+
+        function handleRegionChange() {
+            const formType = document.getElementById('formType').value; const region = regSelect.value;
+            estSelect.innerHTML = '<option value="">Seleccione...</option>'; ciuSelect.innerHTML = '<option value="">Seleccione...</option>';
+            if (!region) return;
+            if (formType === 'Informe') {
+                colEstado.classList.add('hidden'); 
+                let todasCiudades = []; for (let estado in geoData[region]) todasCiudades = todasCiudades.concat(geoData[region][estado]);
+                todasCiudades.sort(); todasCiudades.forEach(c => { let o = document.createElement('option'); o.value = c; o.innerText = c; ciuSelect.appendChild(o); });
+            } else {
+                colEstado.classList.remove('hidden'); for (let estado in geoData[region]) { let o = document.createElement('option'); o.value = estado; o.innerText = estado; estSelect.appendChild(o); }
+            }
+        }
+        function handleEstadoChange() {
+            const region = regSelect.value; const estado = estSelect.value; ciuSelect.innerHTML = '<option value="">Seleccione...</option>';
+            if(region && estado && geoData[region][estado]) { geoData[region][estado].forEach(c => { let o = document.createElement('option'); o.value = c; o.innerText = c; ciuSelect.appendChild(o); }); }
+        }
+
+        function onlyNumbers(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+        function renderForm() {
+            const type = document.getElementById('formType').value;
+            const container = document.getElementById('dynamicFields');
+            const common = document.getElementById('commonFields');
+            const dualSig = document.getElementById('dualSignatureSection');
+            const ubiTitle = document.getElementById('ubiTitle');
+            
+            clearSignature('sig-tech-main'); clearSignature('sig-client-main');
+            regSelect.value = ''; handleRegionChange();
+            container.innerHTML = '';
+
+            if (type === 'Informe') {
+                common.innerHTML = `
+                    <div class="row"><div class="col"><label>Nombre</label><input id="NOMBRE"></div><div class="col"><label>Cédula</label><input type="tel" id="CI" oninput="onlyNumbers(this)"></div></div>
+                    <div class="row"><div class="col"><label>Cargo</label><input id="CARGO"></div><div class="col"><label>Teléfono</label><input type="tel" id="TELEFONO" oninput="onlyNumbers(this)"></div><div class="col"><label>P00</label><input type="tel" id="P00"></div></div>
+                    <div class="row"><div class="col"><label>Ubicación</label><input id="UBICACION"></div><div class="col"><label>Piso</label><input type="tel" id="PISO" oninput="onlyNumbers(this)"></div></div>
+                    <div class="row"><div class="col"><label>Fecha</label><input type="date" id="FECHA"></div></div>
+                `;
+                dualSig.classList.add('hidden');
+                
+                container.innerHTML = `
+                    <div class="card">
+                    <h3 class="section-title" style="margin-top:0">Descripción Detallada del Activo</h3>
+                    <div class="table-responsive"><table class="dynamic-table" id="tablaActivos"><thead><tr><th>Elemento</th><th>Marca</th><th>Modelo</th><th>Serial</th><th>Código Inventario</th><th>Bienes Públicos</th><th>Memoria</th><th>D.D</th><th>Acción</th></tr></thead><tbody></tbody></table></div>
+                    <button type="button" class="btn-secondary" onclick="addActivo()">+ Agregar Activo</button>
+                    </div>
+
+                    <div class="card">
+                    <h3 class="section-title" style="margin-top:0">Evaluación y Diagnóstico</h3><textarea id="evaluacion" rows="3"></textarea>
+                    
+                    <div class="row"><div class="col"><label>Atendido Por</label><input id="atendidoPor"></div><div class="col"><label>P00</label><input type="tel" id="p00Atendido"></div></div>
+                    <div class="row"><div class="col"><label>Firma Atendido</label><canvas id="sig-atendido" class="mini-pad" width="300" height="130"></canvas><button type="button" class="btn-secondary" onclick="clearSignature('sig-atendido')">Borrar</button></div></div>
+                    
+                    <div class="row"><div class="col"><label>Solicitado Por</label><input id="solicitadoPor"></div><div class="col"><label>P00</label><input type="tel" id="p00Solicitado"></div></div>
+                    <div class="row"><div class="col"><label>Firma Solicitado</label><canvas id="sig-solicitado" class="mini-pad" width="300" height="130"></canvas><button type="button" class="btn-secondary" onclick="clearSignature('sig-solicitado')">Borrar</button></div></div>
+                    </div>
+
+                    <div class="card">
+                    <h3 class="section-title" style="margin-top:0" >Repotenciación</h3>
+                    <div class="row"><div class="col"><label>¿Requiere Repotenciación?</label><select id="reqRepot" onchange="toggleRepot()"><option value="" selected>Seleccione...</option><option value="NO">NO</option><option value="SI">SI</option></select></div></div>
+
+                    <div id="repotSection" class="hidden">
+                        <div class="table-responsive"><table class="dynamic-table" id="tablaRepot"><thead><tr><th>Pieza</th><th>Marca</th><th>Número de Parte</th><th>Capacidad</th><th>Observaciones</th><th>Acción</th></tr></thead><tbody></tbody></table></div>
+                        <button type="button" class="btn-secondary" onclick="addRepot()">+ Agregar Pieza</button>
+                        <h3 class="section-title" style="margin-top:1">Validación Técnica</h3>
+                        <div id="auth-section">${renderAuthBlock('Tecnico', 'Técnico de Campo')}${renderAuthBlock('Coordinador', 'Coordinador de Campo')}${renderAuthBlock('Gte', 'Gerente de Seguridad')}</div>
+                    </div>
+                `;
+                initCanvas('sig-atendido'); initCanvas('sig-solicitado'); initCanvas('sig-Tecnico'); initCanvas('sig-Coordinador'); initCanvas('sig-Gte');
+                addActivo();
+            } else {
+                ubiTitle.style.display = 'block';
+                dualSig.classList.remove('hidden');
+                initCanvas('sig-tech-main'); initCanvas('sig-client-main');
+
+                if (type === 'Cierre') {
+                    common.innerHTML = `
+                        <div class="row"><div class="col"><label>Oficina</label><input id="OFICINA"></div><div class="col"><label>Fecha</label><input type="date" id="FECHA"></div></div>
+                        <div class="row"><div class="col"><label>Nombre</label><input id="NOMBRE"></div><div class="col"><label>Cargo</label><input id="CARGO"></div></div>
+                        <div class="row"><div class="col"><label>Teléfono</label><input type="tel" id="TELEFONO" oninput="onlyNumbers(this)"></div><div class="col"><label>Correo</label><input id="CORREO"></div><div class="col"><label>P00</label><input type="tel" id="P00"></div></div>
+                    `;
+
+                    container.innerHTML = `
+                        <div class="card">
+                        <h3 class="section-title" style="margin-top:0">Detalles del Servicio</h3>
+                        <div class="subtitle">TRABAJO REALIZADO</div><textarea id="trabajoRealizado" rows="3"></textarea>
+                        <div class="subtitle">OBSERVACIONES</div><textarea id="observaciones" rows="3"></textarea>
+                        </div>
+
+                        <div class="card">
+                        <h3 class="section-title" style="margin-top:0" >Validación del Servicio</h3>
+                        <div class="row"><div class="col"><label>¿Problema Solucionado?</label><select id="problemaSolucionado"><option value="" selected>Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div></div>
+                        <div class="row"><div class="col"><label>Atendido Por</label><input id="atendidoPor"></div><div class="col"><label>P00</label><input type="tel" id="p00Atendido"></div></div>
+                        <div class="row"><div class="col"><label>Verificado Por</label><input id="verificadoPor"></div><div class="col"><label>P00</label><input type="tel" id="p00Verificado"></div></div>
+                        </div>
+
+                        <div class="card">
+                        <h3 class="section-title" style="margin-top:0" >Encuesta</h3>
+                        <label>Satisfacción</label><select id="satisfaccion"><option value="" selected>Seleccione...</option><option>Muy Satisfecho</option><option>Satisfecho</option><option>Insatisfecho</option><option>Muy Insatisfecho</option></select>
+                        <div class="row"><div class="col"><label>¿Quedó 100% operativa la oficina?</label><select id="oficinaOperativa"><option value="" selected>Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div></div>
+                        <label>Observaciones del cliente</label><textarea id="obsCliente" rows="2"></textarea>
+                        </div>
+                    `;
+                } else if (type === 'Reparacion') {
+                    common.innerHTML = `
+                        <div class="row"><div class="col"><label>Oficina</label><input id="OFICINA"></div><div class="col"><label>Fecha</label><input type="date" id="FECHA"></div></div>
+                        <div class="row"><div class="col"><label>Nombre</label><input id="NOMBRE"></div><div class="col"><label>Cargo</label><input id="CARGO"></div></div>
+                        <div class="row"><div class="col"><label>Teléfono</label><input type="tel" id="TELEFONO" oninput="onlyNumbers(this)"></div><div class="col"><label>Correo</label><input id="CORREO"></div><div class="col"><label>P00</label><input type="tel" id="P00"></div></div>
+                    `;
+
+                    container.innerHTML = `
+                        <div class="card">
+                        <h3 class="section-title" style="margin-top:0" >Detalles del Servicio</h3>
+                        <div class="row"><div class="col"><label>Tipo Atención</label><select id="tipoAtencion"><option value="" selected>Seleccione...</option><option>SOFTWARE</option><option>HARDWARE</option></select></div><div class="col"><label>Problema Reportado</label><input id="problemaReportado"></div></div>
+                        <div class="subtitle">TRABAJO REALIZADO</div><textarea id="trabajoRealizado" rows="2"></textarea>
+                        <div class="subtitle">SUSTITUCIÓN / REPARACIÓN DE HARDWARE</div>
+                        <div class="checkbox-group"><label><input type="checkbox" id="hw_teclado"> Teclado</label><label><input type="checkbox" id="hw_mouse"> Mouse</label><label><input type="checkbox" id="hw_disco"> Disco Duro</label><label><input type="checkbox" id="hw_memoria"> Memoria</label></div>
+                        <div class="subtitle">INSTALACIÓN SOFTWARE</div>
+                        <div class="checkbox-group"><label><input type="checkbox" id="sw_win7"> WINDOWS 7</label><label><input type="checkbox" id="sw_office"> MS Office</label></div>
+                        
+                        <div class="subtitle">DATOS DEL EQUIPO</div>
+                        <div class="row">
+                            <div class="col"><label>Tipo</label><input id="equipo_tipo"></div>
+                            <div class="col"><label>Marca</label><input id="equipo_marca"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col"><label>Modelo</label><input id="equipo_modelo"></div>
+                            <div class="col"><label>IP</label><input id="ip"></div>
+                        </div>
+                        <label>Observaciones</label><textarea id="observaciones" rows="2"></textarea>
+                        </div>
+
+                        <div class="card">
+                        <h3 class="section-title" style="margin-top:0" >Validación del Servicio</h3>
+                        <div class="row"><div class="col"><label>¿Problema Solucionado?</label><select id="solucionado100"><option value="" selected>Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div></div>
+                        <div class="row"><div class="col"><label>Atendido Por</label><input id="atendidoPor"></div><div class="col"><label>P00</label><input type="tel" id="p00Atendido"></div></div>
+                        <div class="row"><div class="col"><label>Verificado Por</label><input id="verificadoPor"></div><div class="col"><label>P00</label><input type="tel" id="p00Verificado"></div></div>
+                        </div>
+
+                        <div class="card">
+                        <h3 class="section-title" style="margin-top:0">Encuesta</h3>
+                        <div class="row"><div class="col"><label>¿Su ticket fue atendido?</label><select id="ticketAtendido"><option value="" selected>Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div>
+                        <div class="col"><label>¿Se solucionó 100% su solicitud?</label><select id="solicitud100"><option value="" selected>Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div></div>
+                        <div class="row"><div class="col"><label>Satisfacción</label><select id="satisfaccion"><option value="" selected>Seleccione...</option><option>Muy Satisfecho</option><option>Satisfecho</option><option>Insatisfecho</option><option>Muy Insatisfecho</option></select></div></div>
+                        <label>Observaciones del cliente</label><input id="obsCliente">
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function toggleRepot() { const val = document.getElementById('reqRepot').value; const sec = document.getElementById('repotSection'); if(val === 'SI') sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+        
+        function renderAuthBlock(idSuffix, labelTitle) { 
+            return `
+            <div class="card" style="border-left: 4px solid #007bff; padding: 10px; margin-top:10px;">
+                <label>${labelTitle}</label>
+                <input type="text" id="name-${idSuffix}" placeholder="Nombre del Responsable">
+                <input type="tel" id="p00-${idSuffix}" placeholder="P00">
+                <label style="margin-top:10px;">Firma</label>
+                <div class="signature-container">
+                    <canvas id="sig-${idSuffix}" width="400" height="130"></canvas>
+                    <button type="button" class="btn-secondary" onclick="clearSignature('sig-${idSuffix}')">Borrar Firma</button>
+                </div>
+            </div>`; 
+        }
+        
+        function initCanvas(canvasId) { const canvas = document.getElementById(canvasId); if(!canvas) return; const ctx = canvas.getContext('2d'); let writing = false; const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const scaleX = canvas.width / rect.width; const scaleY = canvas.height / rect.height; return [((e.clientX||e.touches[0].clientX)-rect.left)*scaleX, ((e.clientY||e.touches[0].clientY)-rect.top)*scaleY]; }; const start = (e) => { writing=true; ctx.beginPath(); const [x,y]=getPos(e); ctx.moveTo(x,y); }; const move = (e) => { if(!writing)return; const [x,y]=getPos(e); ctx.lineTo(x,y); ctx.stroke(); }; const end = () => { writing=false; }; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end); canvas.addEventListener('touchstart', (e)=>{start(e);e.preventDefault()}, {passive:false}); canvas.addEventListener('touchmove', (e)=>{move(e);e.preventDefault()}, {passive:false}); canvas.addEventListener('touchend', (e)=>{end(e);e.preventDefault()}, {passive:false}); }
+        function clearSignature(id) { const c = document.getElementById(id); if(c) c.getContext('2d').clearRect(0,0,c.width,c.height); }
+        function getAuthValue(suffix) { const canvas = document.getElementById(`sig-${suffix}`); if (canvas) return { type: 'img', value: canvas.toDataURL() }; return null; }
+        
+        function addActivo() { document.querySelector('#tablaActivos tbody').insertAdjacentHTML('beforeend', `<tr><td><input class="it-el"></td><td><input class="it-ma"></td><td><input class="it-mo"></td><td><input class="it-se"></td><td><input class="it-cod"></td><td><input class="it-bie"></td><td><input class="it-mem"></td><td><input class="it-dd"></td><td><button type="button" onclick="this.closest('tr').remove()" style="color:red">x</button></td></tr>`); }
+        function addRepot() { document.querySelector('#tablaRepot tbody').insertAdjacentHTML('beforeend', `<tr><td><input class="rp-pi"></td><td><input class="rp-ma"></td><td><input class="rp-no"></td><td><input class="rp-ca"></td><td><input class="rp-obs"></td><td><button type="button" onclick="this.closest('tr').remove()" style="color:red">x</button></td></tr>`); }
+
+        async function enviarFormulario() {
+            const type = document.getElementById('formType').value;
+            const base = {
+                formType: type, 
+                REGION: document.getElementById('REGION').value, 
+                ESTADO: document.getElementById('ESTADO') ? document.getElementById('ESTADO').value : '', 
+                CIUDAD: document.getElementById('CIUDAD').value,
+                NOMBRE: document.getElementById('NOMBRE').value, TELEFONO: document.getElementById('TELEFONO').value,
+                CARGO: document.getElementById('CARGO').value, FECHA: document.getElementById('FECHA').value, FECHA_REPORTE: document.getElementById('FECHA').value,
+            };
+
+            if (type === 'Informe') {
+                const repotRows = document.getElementById('reqRepot').value === 'SI' ? Array.from(document.querySelectorAll('#tablaRepot tbody tr')) : [];
+                Object.assign(base, {
+                    CI: document.getElementById('CI').value, UBICACION: document.getElementById('UBICACION').value,
+                    PISO: document.getElementById('PISO').value, 
+                    P00: document.getElementById('P00') ? document.getElementById('P00').value : '', 
+                    evaluacion: document.getElementById('evaluacion').value,
+                    atendidoPor: document.getElementById('atendidoPor').value,
+                    p00Atendido: document.getElementById('p00Atendido').value,
+                    firmaAtendido: document.getElementById('sig-atendido').toDataURL(),
+                    solicitadoPor: document.getElementById('solicitadoPor').value,
+                    p00Solicitado: document.getElementById('p00Solicitado').value,
+                    firmaSolicitado: document.getElementById('sig-solicitado').toDataURL(), 
+                    
+                    tecnicoCampo: document.getElementById('reqRepot').value === 'SI' ? document.getElementById('name-Tecnico').value : '',
+                    p00Tecnico: document.getElementById('reqRepot').value === 'SI' ? document.getElementById('p00-Tecnico').value : '', 
+                    authTecnico: document.getElementById('reqRepot').value === 'SI' ? getAuthValue('Tecnico') : null,
+                    
+                    coordinadorCampo: document.getElementById('reqRepot').value === 'SI' ? document.getElementById('name-Coordinador').value : '',
+                    p00Coordinador: document.getElementById('reqRepot').value === 'SI' ? document.getElementById('p00-Coordinador').value : '', 
+                    authCoordinador: document.getElementById('reqRepot').value === 'SI' ? getAuthValue('Coordinador') : null,
+                    
+                    gteSeguridad: document.getElementById('reqRepot').value === 'SI' ? document.getElementById('name-Gte').value : '',
+                    p00Gte: document.getElementById('reqRepot').value === 'SI' ? document.getElementById('p00-Gte').value : '', 
+                    authGte: document.getElementById('reqRepot').value === 'SI' ? getAuthValue('Gte') : null,
+                    
+                    items: Array.from(document.querySelectorAll('#tablaActivos tbody tr')).map(tr => ({
+                        elemento: tr.cells[0].children[0].value, marca: tr.cells[1].children[0].value, modelo: tr.cells[2].children[0].value,
+                        serial: tr.cells[3].children[0].value, codInv: tr.cells[4].children[0].value,
+                        bienesPublicos: tr.cells[5].children[0].value, memoria: tr.cells[6].children[0].value, dd: tr.cells[7].children[0].value
+                    })),
+                    repot: repotRows.map(tr => ({
+                        pieza: tr.cells[0].children[0].value, marca: tr.cells[1].children[0].value, noParte: tr.cells[2].children[0].value, 
+                        capacidad: tr.cells[3].children[0].value, observaciones: tr.cells[4].children[0].value
+                    }))
+                });
+            } else {
+                const techCanvas = document.getElementById('sig-tech-main');
+                const clientCanvas = document.getElementById('sig-client-main');
+                base.firmaTecnico = techCanvas ? techCanvas.toDataURL() : '';
+                base.firmaCliente = clientCanvas ? clientCanvas.toDataURL() : '';
+                base.OFICINA = document.getElementById('OFICINA').value;
+                base.USUARIO = document.getElementById('NOMBRE').value;
+                base.CORREO = document.getElementById('CORREO').value;
+
+                if(type === 'Cierre') {
+                    base.trabajoRealizado = document.getElementById('trabajoRealizado').value;
+                    base.observaciones = document.getElementById('observaciones').value;
+                    base.problemaSolucionado = document.getElementById('problemaSolucionado').value;
+                    base.atendidoPor = document.getElementById('atendidoPor').value;
+                    base.p00Atendido = document.getElementById('p00Atendido').value;
+                    base.verificadoPor = document.getElementById('verificadoPor').value;
+                    base.p00Verificado = document.getElementById('p00Verificado').value;
+                    base.satisfaccion = document.getElementById('satisfaccion').value;
+                    base.oficinaOperativa = document.getElementById('oficinaOperativa').value; 
+                    base.obsCliente = document.getElementById('obsCliente').value;
+                    base.P00 = document.getElementById('P00').value; 
+                    base.FECHA_CIERRE = base.FECHA; 
+                } else if (type === 'Reparacion') {
+                     base.tipoAtencion = document.getElementById('tipoAtencion').value;
+                     base.problemaReportado = document.getElementById('problemaReportado').value;
+                     base.trabajoRealizado = document.getElementById('trabajoRealizado').value;
+                     base.hw_teclado = document.getElementById('hw_teclado').checked;
+                     base.hw_mouse = document.getElementById('hw_mouse').checked;
+                     base.hw_disco = document.getElementById('hw_disco').checked;
+                     base.hw_memoria = document.getElementById('hw_memoria').checked;
+                     base.sw_win7 = document.getElementById('sw_win7').checked;
+                     base.sw_office = document.getElementById('sw_office').checked;
+                     base.equipo_tipo = document.getElementById('equipo_tipo').value;
+                     base.equipo_marca = document.getElementById('equipo_marca').value;
+                     base.equipo_modelo = document.getElementById('equipo_modelo').value;
+                     base.ip = document.getElementById('ip').value;
+                     base.observaciones = document.getElementById('observaciones').value; 
+                     base.solucionado100 = document.getElementById('solucionado100').value;
+                     base.atendidoPor = document.getElementById('atendidoPor').value;
+                     base.p00Atendido = document.getElementById('p00Atendido').value;
+                     base.verificadoPor = document.getElementById('verificadoPor').value;
+                     base.p00Verificado = document.getElementById('p00Verificado').value;
+                     base.ticketAtendido = document.getElementById('ticketAtendido').value; 
+                     base.solicitud100 = document.getElementById('solicitud100').value; 
+                     base.satisfaccion = document.getElementById('satisfaccion').value;
+                     base.obsCliente = document.getElementById('obsCliente').value; 
+                     base.P00 = document.getElementById('P00').value;
+                }
+            }
+
+            try {
+                const res = await fetch('/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(base) });
+                const json = await res.json();
+                if(json.ok) alert('Formulario Enviado Correctamente'); else alert('Error: ' + json.error);
+            } catch(e) { console.error(e); alert('Error Conexión'); }
+        }
+    </script>
+</body>
+</html>
