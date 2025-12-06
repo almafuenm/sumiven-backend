@@ -139,6 +139,14 @@
         }
         
         .btn-primary:active { transform: translateY(1px); }
+        
+        /* ESTILO PARA CUANDO EL BOTÓN ESTÁ CARGANDO */
+        .btn-primary:disabled {
+            background: #94a3b8; /* Gris */
+            cursor: wait;
+            transform: none;
+            box-shadow: none;
+        }
 
         .btn-secondary { 
             background: #f1f5f9; 
@@ -260,7 +268,7 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-primary" onclick="enviarFormulario()">Generar y Enviar PDF</button>
+            <button type="button" id="btnEnviar" class="btn-primary" onclick="enviarFormulario()">Generar y Enviar PDF</button>
         </form>
     </div>
 
@@ -465,7 +473,17 @@
         function addActivo() { document.querySelector('#tablaActivos tbody').insertAdjacentHTML('beforeend', `<tr><td><input class="it-el"></td><td><input class="it-ma"></td><td><input class="it-mo"></td><td><input class="it-se"></td><td><input class="it-cod"></td><td><input class="it-bie"></td><td><input class="it-mem"></td><td><input class="it-dd"></td><td><button type="button" onclick="this.closest('tr').remove()" style="color:red">x</button></td></tr>`); }
         function addRepot() { document.querySelector('#tablaRepot tbody').insertAdjacentHTML('beforeend', `<tr><td><input class="rp-pi"></td><td><input class="rp-ma"></td><td><input class="rp-no"></td><td><input class="rp-ca"></td><td><input class="rp-obs"></td><td><button type="button" onclick="this.closest('tr').remove()" style="color:red">x</button></td></tr>`); }
 
+        // --- FUNCIÓN ACTUALIZADA CON FEEDBACK VISUAL ---
         async function enviarFormulario() {
+            // 1. Obtener referencia al botón
+            const btnEnviar = document.getElementById('btnEnviar');
+            const textoOriginal = btnEnviar.innerText;
+
+            // 2. ACTIVAR "MODO CARGA"
+            btnEnviar.disabled = true;
+            btnEnviar.innerText = "⏳ Generando PDF y Enviando... Por favor espere";
+            btnEnviar.style.backgroundColor = "#94a3b8"; // Cambiar a gris
+
             const type = document.getElementById('formType').value;
             const base = {
                 formType: type, 
@@ -563,10 +581,24 @@
             }
 
             try {
+                // Hacemos el fetch
                 const res = await fetch('/api/submit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(base) });
                 const json = await res.json();
-                if(json.ok) alert('Formulario Enviado Correctamente'); else alert('Error: ' + json.error);
-            } catch(e) { console.error(e); alert('Error Conexión'); }
+                
+                if(json.ok) {
+                    alert('¡Éxito! Formulario procesado y enviado al correo.');
+                } else {
+                    alert('Error del Servidor: ' + json.error);
+                }
+            } catch(e) { 
+                console.error(e); 
+                alert('Error de Conexión: No se pudo contactar al servidor.'); 
+            } finally {
+                // 3. RESTAURAR EL BOTÓN (Siempre se ejecuta, haya error o éxito)
+                btnEnviar.disabled = false;
+                btnEnviar.innerText = textoOriginal;
+                btnEnviar.style.backgroundColor = ""; // Volver al color original CSS
+            }
         }
     </script>
 </body>

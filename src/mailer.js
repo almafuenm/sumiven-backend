@@ -4,24 +4,23 @@ dotenv.config();
 
 export async function sendEmailWithPDF(pdfPath, excelPath, to = null, formName = 'Formulario') {
   
-  // --- CONFIGURACIÓN "TODO TERRENO" PARA LA NUBE ---
+  // --- INTENTO #2: PUERTO 587 (STARTTLS) ---
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465,               // Usamos puerto seguro SSL directo
-    secure: true,            // Obligatorio true para puerto 465
+    port: 587,               // Cambiamos al puerto estándar
+    secure: false,           // OBLIGATORIO false para 587
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
     },
     tls: {
-      // Ignorar errores de certificado (común en servidores cloud)
       rejectUnauthorized: false
     },
-    // --- EL TRUCO SECRETO ---
-    // Forzar conexión IPv4 (evita que Docker intente IPv6 y se cuelgue)
-    family: 4 
+    family: 4,               // Mantenemos IPv4 forzado
+    logger: true,            // ACTIVAMOS LOGS EN RENDER
+    debug: true              // ACTIVAMOS DEBUG
   });
-  // ------------------------------------------------
+  // ----------------------------------------
 
   const mailOptions = {
     from: `"Sumiven" <${process.env.SMTP_USER}>`,
@@ -35,15 +34,15 @@ export async function sendEmailWithPDF(pdfPath, excelPath, to = null, formName =
   };
 
   try {
-    // Verificación previa de conexión (opcional, ayuda a debuggear)
+    console.log("Iniciando conexión con Gmail por puerto 587...");
     await transporter.verify(); 
-    console.log("Conexión SMTP lista...");
+    console.log("Conexión SMTP verificada correctamente.");
 
     const info = await transporter.sendMail(mailOptions);
     console.log('Correo enviado, messageId:', info.messageId);
     return info;
   } catch (error) {
-    console.error("Error enviando email:", error);
+    console.error("Error DETALLADO enviando email:", error);
     throw error;
   }
 }
